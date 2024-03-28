@@ -128,7 +128,7 @@ class BaseMapper(object):
 
     def __init__(
         self,
-        boundary: Union[str, BytesIO],          # The boundary parameter representing the AOI
+        boundary: Union[str, BytesIO],
         base: str,
         source: str,
         xy: bool,
@@ -136,7 +136,7 @@ class BaseMapper(object):
         """Create an tile basemap for ODK Collect.
 
         Args:
-            boundary Union[str, BytesIO]: A BBOX string, GeoJSON file, GeoJSON data as BytesIO of the AOI.
+            boundary (Union[str, BytesIO]): A BBOX string, GeoJSON file, GeoJSON data as BytesIO of the AOI
                 The GeoJSON can contain multiple geometries.
             base (str): The base directory to cache map tile in
             source (str): The upstream data source for map tiles
@@ -275,12 +275,12 @@ class BaseMapper(object):
 
     def makeBbox(
         self,
-        boundary: Union[str, BytesIO],           # The boundary parameter representing the AOI
+        boundary: Union[str, BytesIO],
     ) -> tuple[float, float, float, float]:
         """Make a bounding box from a shapely geometry.
 
         Args:
-            boundary Union[str, BytesIO]: A BBOX string, GeoJSON file, GeoJSON data as BytesIO of the AOI.
+            boundary (Union[str, BytesIO]): A BBOX string, GeoJSON file, GeoJSON data as BytesIO of the AOI
                 The GeoJSON can contain multiple geometries.
 
         Returns:
