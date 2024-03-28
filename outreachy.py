@@ -1,9 +1,11 @@
-"""Module for generating .mbtiles archieve"""
+"""For generating .mbtiles archive"""
 
 from osm_fieldwork.basemapper import create_basemap_file
+from tests.test_basemap import boundary
+
 
 create_basemap_file(
-    boundary="-4.730494,41.650541,-4.725634,41.652874",
+    boundary= boundary,
     outfile="outreachy.mbtiles",
     zooms="12-15",
     source="esri",
