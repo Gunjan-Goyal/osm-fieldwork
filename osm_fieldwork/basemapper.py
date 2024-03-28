@@ -26,9 +26,9 @@ import queue
 import re
 import sys
 import threading
+from io import BytesIO
 from pathlib import Path
 from typing import Union
-from io import BytesIO
 
 import geojson
 import mercantile
@@ -47,8 +47,8 @@ from pySmartDL import SmartDL
 from shapely.geometry import shape
 from shapely.ops import unary_union
 
-from osm_fieldwork.to_bytesio import read_geojson_bytesio
 from osm_fieldwork.sqlite import DataFile, MapTile
+from osm_fieldwork.to_bytesio import read_geojson_bytesio
 from osm_fieldwork.xlsforms import xlsforms_path
 from osm_fieldwork.yamlfile import YamlFile
 
@@ -128,7 +128,7 @@ class BaseMapper(object):
 
     def __init__(
         self,
-        boundary:Union[str, BytesIO],
+        boundary: Union[str, BytesIO],
         base: str,
         source: str,
         xy: bool,
@@ -137,7 +137,6 @@ class BaseMapper(object):
 
         Args:
             boundary Union[str, BytesIO]: A BBOX string, GeoJSON file, GeoJSON data as BytesIO of the AOI.
-                The GeoJSON can contain multiple geometries.
             base (str): The base directory to cache map tile in
             source (str): The upstream data source for map tiles
             xy (bool): Whether to swap the X & Y fields in the TMS URL
@@ -275,7 +274,7 @@ class BaseMapper(object):
 
     def makeBbox(
         self,
-        boundary:Union[str, BytesIO],
+        boundary: Union[str, BytesIO],
     ) -> tuple[float, float, float, float]:
         """Make a bounding box from a shapely geometry.
 
@@ -286,32 +285,31 @@ class BaseMapper(object):
         Returns:
             Tuple[float, float, float, float]: The bounding box coordinates
         """
-
         if isinstance(boundary, BytesIO):
-        # Handle GeoJSON data as BytesIO
+            # Handle GeoJSON data as BytesIO
             log.debug(f"Reading geojson data as BytesIO: {boundary}")
             boundary.seek(0)
             with boundary as b:
                 poly = geojson.load(b)
         elif boundary.lower().endswith((".json", ".geojson")):
-        # Handle GeoJSON file
+            # Handle GeoJSON file
             log.debug(f"Reading geojson file: {boundary}")
             with open(boundary, "r") as f:
-                poly = geojson.load(f) 
+                poly = geojson.load(f)
         else:
-        # Handle Bbox string
+            # Handle Bbox string
             log.debug("Parsing Bbox string")
             try:
                 bbox_parts = boundary.split(",") if "," in boundary else boundary.split(" ")
                 bbox = tuple(float(x) for x in bbox_parts)
-                if len(bbox) == 4:     # BBOX valid
+                if len(bbox) == 4:  # BBOX valid
                     return bbox
                 else:
                     raise ValueError(f"BBOX string malformed: {bbox}")
             except Exception as e:
                 log.error(f"Failed to parse BBOX string: {boundary}.Error:{e}")
-                raise ValueError(f"Failed to parse BBOX string: {boundary}") from e    
-        
+                raise ValueError(f"Failed to parse BBOX string: {boundary}") from e
+
         if "features" in poly:
             geometry = shape(poly["features"][0]["geometry"])
         elif "geometry" in poly:
@@ -570,7 +568,7 @@ def main():
             log.error("")
             parser.print_help()
             quit()
-        boundary_parsed = read_geojson_bytesio(args.boundary[0])        #boundary paramter wrapped in BytesIO object
+        boundary_parsed = read_geojson_bytesio(args.boundary[0])  # boundary paramter wrapped in BytesIO object
     elif len(args.boundary) == 4:
         boundary_parsed = ",".join(args.boundary)
     else:
