@@ -128,7 +128,7 @@ class BaseMapper(object):
 
     def __init__(
         self,
-        boundary: Union[str, BytesIO],
+        boundary: Union[str, BytesIO],          # The boundary parameter representing the AOI
         base: str,
         source: str,
         xy: bool,
@@ -137,6 +137,7 @@ class BaseMapper(object):
 
         Args:
             boundary Union[str, BytesIO]: A BBOX string, GeoJSON file, GeoJSON data as BytesIO of the AOI.
+                The GeoJSON can contain multiple geometries.
             base (str): The base directory to cache map tile in
             source (str): The upstream data source for map tiles
             xy (bool): Whether to swap the X & Y fields in the TMS URL
@@ -274,7 +275,7 @@ class BaseMapper(object):
 
     def makeBbox(
         self,
-        boundary: Union[str, BytesIO],
+        boundary: Union[str, BytesIO],           # The boundary parameter representing the AOI
     ) -> tuple[float, float, float, float]:
         """Make a bounding box from a shapely geometry.
 
